@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IURDAS Executive — MoUs & Strategic Partnerships Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              950: '#070d19',
+              900: '#0b1324',
+              850: '#0f172a',
+              800: '#162036',
+              700: '#1e293b',
+            },
+            urblue: {
+              900: '#091933',
+              800: '#0c2347',
+              700: '#113264',
+              500: '#0ea5e9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background-color: #070d19;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070d19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    .sidebar-gradient {
+      background: linear-gradient(180deg, #0e274d 0%, #091a36 55%, #071329 100%);
+    }
+    .panel-card {
+      background-color: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      transition: border-color 0.2s ease, transform 0.15s ease;
+    }
+    .panel-card:hover {
+      border-color: #2c3e5a;
+    }
+    .kpi-card {
+      background: linear-gradient(180deg, #111c33 0%, #0d1526 100%);
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
+    }
+    .kpi-top-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    select.custom-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.65rem center;
+      background-size: 0.9rem;
+    }
+    .svg-bar {
+      transition: opacity 0.18s ease, filter 0.18s ease;
+      cursor: pointer;
+    }
+    .svg-bar:hover {
+      opacity: 0.85;
+      filter: brightness(1.15);
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .panel-card, .kpi-card { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row antialiased selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- Hidden File Input for CSV Ingestion -->
+  <input type="file" id="csvFileInput" accept=".csv,text/csv" class="hidden" />
+
+  <!-- Floating Interactive Tooltip for SVG Charts -->
+  <div id="chartTooltip" class="fixed z-50 pointer-events-none hidden bg-slate-900/95 backdrop-blur-md border border-slate-700 text-slate-100 text-xs rounded-lg px-3 py-2 shadow-2xl max-w-xs"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden" onclick="toggleMobileSidebar(false)"></div>
+
+  <!-- ==================== LEFT SIDEBAR ==================== -->
+  <aside id="sidebar" class="sidebar-gradient w-64 shrink-0 border-r border-slate-800/80 flex flex-col justify-between fixed lg:sticky top-0 left-0 h-screen z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out no-print">
+    <div>
+      <!-- Brand Header -->
+      <div class="p-4 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-sky-500/20 border-2 border-sky-400 flex items-center justify-center shadow-inner shrink-0">
+            <span class="text-sky-300 font-extrabold text-sm tracking-tight">UR</span>
+          </div>
+          <div>
+            <div class="text-white font-bold text-sm leading-tight tracking-tight">IURDAS Executive</div>
+            <div class="text-sky-200/70 text-[11px] font-medium mt-0.5">Strategic Planning &amp; M&amp;E</div>
+          </div>
+        </div>
+        <button class="lg:hidden text-slate-300 hover:text-white p-1" onclick="toggleMobileSidebar(false)" aria-label="Close Sidebar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Navigation Section -->
+      <div class="px-3 pt-5 pb-2">
+        <div class="px-2.5 text-[10px] font-bold tracking-wider text-sky-300/60 uppercase mb-2.5">
+          UR Central Repository
+        </div>
+
+        <nav class="space-y-1" id="sidebarNav">
+          <button data-tab="overview" onclick="switchTab('overview')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all bg-sky-500/20 text-white border border-sky-400/30 shadow-sm">
+            <span class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-sky-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              Executive Overview
+            </span>
+            <span id="badgeOverview" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-sky-500/30 text-sky-200 border border-sky-400/30">823</span>
+          </button>
+
+          <button data-tab="alerts" onclick="switchTab('alerts')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all border border-transparent">
+            <span class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              Expiry &amp; Renewal Alerts
+            </span>
+            <span id="badgeAlerts" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">16</span>
+          </button>
+
+          <button data-tab="register" onclick="switchTab('register')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all border border-transparent">
+            <span class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Master MoU Register
+            </span>
+            <span id="badgeRegister" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-slate-700/80 text-slate-200 border border-slate-600/50">Full</span>
+          </button>
+
+          <button data-tab="funded" onclick="switchTab('funded')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all border border-transparent">
+            <span class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-teal-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Funded Commitments
+            </span>
+            <span id="badgeFunded" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30">50</span>
+          </button>
+
+          <button data-tab="strategic" onclick="switchTab('strategic')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all border border-transparent">
+            <span class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-purple-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              Strategic Forecasting
+            </span>
+            <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">M&amp;E</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Long-Term Governance Sidebar Footer -->
+    <div class="p-3.5 border-t border-white/10 space-y-2.5 bg-black/20">
+      <button onclick="openFormModal()" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-950/50 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Register New MoU
+      </button>
+
+      <button onclick="downloadCSVTemplate()" class="w-full py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-sky-200 border border-white/10 font-medium text-[11px] flex items-center justify-center gap-1.5 transition-colors">
+        <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Download CSV Schema
+      </button>
+
+      <div class="pt-1 flex items-center justify-between text-[10px] text-slate-400">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="storageModeLabel">Local Vault Synced</span>
+        </span>
+        <button onclick="restoreBaselineDataset()" class="text-sky-400 hover:text-sky-300 underline" title="Restore 823 baseline dataset">Restore 823</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- TOP EXECUTIVE HEADER BAR -->
+    <header class="bg-[#091122]/95 backdrop-blur-md border-b border-slate-800/90 px-4 lg:px-6 py-3.5 sticky top-0 z-20">
+      <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+        <!-- Left Title & Mobile Menu Trigger -->
+        <div class="flex items-start sm:items-center gap-3">
+          <button onclick="toggleMobileSidebar(true)" class="lg:hidden mt-0.5 sm:mt-0 p-2 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700" aria-label="Open Navigation">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">MoUs &amp; Strategic Partnerships Portal</h1>
+              <span id="activeDataBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30">UR Baseline (823)</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Institutional Partnership Governance, Global Footprint &amp; Lifecycle Monitoring</p>
+          </div>
+        </div>
+
+        <!-- Center College / Unit Quick-Filter Pills -->
+        <div class="flex items-center gap-1.5 flex-wrap no-print" id="collegePillsContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Right Action Buttons -->
+        <div class="flex items-center gap-2 shrink-0 no-print">
+          <button onclick="triggerCSVUpload()" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+            Load CSV Dataset
+          </button>
+          <button onclick="exportFilteredCSV()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs flex items-center gap-1.5 transition-colors">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export View
+          </button>
+          <button onclick="resetAllFilters()" class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 font-medium text-xs flex items-center gap-1 transition-colors" title="Reset All Filters">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Reset
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="p-4 lg:p-6 space-y-5 flex-1 max-w-[1680px] w-full mx-auto">
+
+      <!-- DATASET STATUS BANNER -->
+      <div class="rounded-xl bg-gradient-to-r from-[#0c2242] via-[#0e294e] to-[#0b1d38] border border-sky-500/30 px-4 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-sm no-print">
+        <div class="text-xs text-slate-200 leading-relaxed">
+          <span class="font-bold text-sky-400">Dataset Active:</span>
+          <span id="datasetBannerText">Pre-loaded with UR institutional repository (823 MoUs). Click any chart element, filter dropdown, or <code class="px-1.5 py-0.5 rounded bg-slate-900/80 text-sky-300 font-mono text-[11px]">Load CSV Dataset</code> to cross-filter or ingest <code class="px-1.5 py-0.5 rounded bg-slate-900/80 text-sky-300 font-mono text-[11px]">MoUs_Datasets_Revised(MoUs_Dataset).csv</code>.</span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="triggerCSVUpload()" class="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-colors whitespace-nowrap">
+            Select CSV File
+          </button>
+        </div>
+      </div>
+
+      <!-- 6-COLUMN DYNAMIC CROSS-FILTER BAR + LIVE SEARCH -->
+      <section class="panel-card p-3.5 space-y-3 no-print">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2.5">
+          <!-- 1. Signing Year -->
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Signing Year</label>
+            <select id="filterYear" onchange="applyFilters()" class="custom-select w-full bg-[#090f1d] border border-slate-700/80 hover:border-slate-600 focus:border-sky-500 focus:outline-none rounded-lg px-2.5 py-2 text-xs text-slate-100 font-medium">
+              <option value="ALL">All Years (2010–2026)</option>
+            </select>
+          </div>
+          <!-- 2. Region / Continent -->
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Region / Continent</label>
+            <select id="filterRegion" onchange="applyFilters()" class="custom-select w-full bg-[#090f1d] border border-slate-700/80 hover:border-slate-600 focus:border-sky-500 focus:outline-none rounded-lg px-2.5 py-2 text-xs text-slate-100 font-medium">
+              <option value="ALL">All Regions</option>
+            </select>
+          </div>
+          <!-- 3. Partner Country -->
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Partner Country</label>
+            <select id="filterCountry" onchange="applyFilters()" class="custom-select w-full bg-[#090f1d] border border-slate-700/80 hover:border-slate-600 focus:border-sky-500 focus:outline-none rounded-lg px-2.5 py-2 text-xs text-slate-100 font-medium">
+              <option value="ALL">All Countries (68)</option>
+            </select>
+          </div>
+          <!-- 4. Workflow Status -->
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Workflow Status</label>
+            <select id="filterStatus" onchange="applyFilters()" class="custom-select w-full bg-[#090f1d] border border-slate-700/80 hover:border-slate-600 focus:border-sky-500 focus:outline-none rounded-lg px-2.5 py-2 text-xs text-slate-100 font-medium">
+              <option value="ALL">All Statuses</option>
+              <option value="Active / In Execution">Active / In Execution</option>
+              <option value="Open-Ended Active">Open-Ended Active</option>
+              <option value="Under Renewal Review">Under Renewal Review</option>
+              <option value="Completed">Completed</option>
+              <option value="Expired">Expired</option>
+            </select>
+          </div>
+          <!-- 5. Expiry Alert -->
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Expiry Alert</label>
+            <select id="filterAlert" onchange="applyFilters()" class="custom-select w-full bg-[#090f1d] border border-slate-700/80 hover:border-slate-600 focus:border-sky-500 focus:outline-none rounded-lg px-2.5 py-2 text-xs text-slate-100 font-medium">
+              <option value="ALL">All Alerts</option>
+              <option value="EXPIRING_6M">Expiring Soon (&lt;6 Mo)</option>
+              <option value="CRITICAL_90D">Critical (&lt;90 Days)</option>
+              <option value="EXPIRED">Expired Agreements</option>
+              <option value="OPEN_ENDED">Open-Ended</option>
+              <option value="HEALTHY">Active &amp; Healthy (&gt;6 Mo)</option>
+            </select>
+          </div>
+          <!-- 6. Thematic Focus -->
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Thematic Focus</label>
+            <select id="filterTheme" onchange="applyFilters()" class="custom-select w-full bg-[#090f1d] border border-slate-700/80 hover:border-slate-600 focus:border-sky-500 focus:outline-none rounded-lg px-2.5 py-2 text-xs text-slate-100 font-medium">
+              <option value="ALL">All Collaboration Areas</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Search & Active Filter Indicator Row -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
+          <div class="relative flex-1 max-w-md">
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input id="searchInput" type="text" oninput="applyFilters()" placeholder="Search partner institution, focal point, grant, or remark..." class="w-full bg-[#090f1d] border border-slate-700/80 focus:border-sky-500 focus:outline-none rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-100 placeholder-slate-500" />
+          </div>
+          <div id="activeFilterPills" class="flex items-center gap-1.5 flex-wrap text-[11px]">
+            <span class="text-slate-400">Showing <strong id="filteredCountText" class="text-white">823</strong> of <strong id="totalCountText" class="text-slate-300">823</strong> agreements</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 EXECUTIVE KPI SUMMARY CARDS (ALWAYS VISIBLE ACROSS VIEWS) -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <!-- KPI 1: Total Signed MoUs -->
+        <div onclick="resetAllFilters()" class="kpi-card p-4 cursor-pointer" title="Click to view all agreements">
+          <div class="kpi-top-line bg-sky-500"></div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Signed MoUs</div>
+          <div id="kpiTotal" class="text-2xl sm:text-3xl font-extrabold text-white mt-1.5 tracking-tight">823</div>
+          <div class="flex items-center gap-2 mt-2.5 flex-wrap">
+            <span id="kpiOpenEnded" class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">140 Open-Ended</span>
+            <span id="kpiFixedTerm" class="text-[11px] text-slate-400 font-medium">683 Fixed-Term</span>
+          </div>
+        </div>
+
+        <!-- KPI 2: Active Workflow MoUs -->
+        <div onclick="quickFilterStatus('Active / In Execution')" class="kpi-card p-4 cursor-pointer" title="Click to filter active execution MoUs">
+          <div class="kpi-top-line bg-emerald-500"></div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Workflow MoUs</div>
+          <div id="kpiActive" class="text-2xl sm:text-3xl font-extrabold text-white mt-1.5 tracking-tight">272</div>
+          <div class="flex items-center gap-2 mt-2.5 flex-wrap">
+            <span id="kpiActivePct" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">33.0%</span>
+            <span class="text-[11px] text-slate-400 font-medium">Currently in execution</span>
+          </div>
+        </div>
+
+        <!-- KPI 3: Expiring Soon (<6 Mo) -->
+        <div onclick="quickFilterAlert('EXPIRING_6M')" class="kpi-card p-4 cursor-pointer" title="Click to filter agreements expiring within 6 months">
+          <div class="kpi-top-line bg-amber-500"></div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Expiring Soon (&lt;6 Mo)</div>
+          <div id="kpiExpiring" class="text-2xl sm:text-3xl font-extrabold text-white mt-1.5 tracking-tight">16</div>
+          <div class="flex items-center gap-2 mt-2.5 flex-wrap">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Action Required</span>
+            <span class="text-[11px] text-slate-400 font-medium">Renewal review window</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: Partner Countries -->
+        <div onclick="switchTab('strategic')" class="kpi-card p-4 cursor-pointer" title="Explore global geographic footprint">
+          <div class="kpi-top-line bg-purple-500"></div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Partner Countries</div>
+          <div id="kpiCountries" class="text-2xl sm:text-3xl font-extrabold text-white mt-1.5 tracking-tight">68</div>
+          <div class="flex items-center gap-2 mt-2.5 flex-wrap">
+            <span id="kpiDomesticPct" class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">40.0% Rwanda</span>
+            <span id="kpiIntlPct" class="text-[11px] text-slate-400 font-medium">60.0% Intl</span>
+          </div>
+        </div>
+
+        <!-- KPI 5: Disclosed Grant/MoU Value -->
+        <div onclick="switchTab('funded')" class="kpi-card p-4 cursor-pointer" title="Click to inspect all funded agreements">
+          <div class="kpi-top-line bg-teal-400"></div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Disclosed Grant/MoU Value</div>
+          <div id="kpiFundedCount" class="text-2xl sm:text-3xl font-extrabold text-white mt-1.5 tracking-tight">50</div>
+          <div class="flex items-center gap-1.5 mt-2.5 flex-wrap">
+            <span id="kpiFundedSummary" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 truncate max-w-full">~$6.4M+ &amp; 1.77B RWF</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 1: EXECUTIVE OVERVIEW ==================== -->
+      <div id="view-overview" class="space-y-5">
+        <!-- Row 1 Charts: 2-Column Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <!-- Chart 1: Partnership Signing Momentum (2010–2026) -->
+          <div class="panel-card p-4 lg:col-span-7 flex flex-col justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <div>
+                <h2 class="text-sm font-bold text-white">Partnership Signing Momentum (2010–2026)</h2>
+                <p class="text-[11px] text-slate-400">Annual signed MoUs segmented by Domestic (Rwanda) vs. International Partners • Click bar to filter year</p>
+              </div>
+              <div class="flex items-center gap-3 text-[11px] shrink-0">
+                <span class="flex items-center gap-1.5 text-slate-300"><span class="w-2.5 h-2.5 rounded-sm bg-sky-500 inline-block"></span>Domestic (Rwanda)</span>
+                <span class="flex items-center gap-1.5 text-slate-300"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span>International</span>
+              </div>
+            </div>
+            <div id="chartSigningMomentum" class="w-full h-64 sm:h-72"></div>
+          </div>
+
+          <!-- Chart 2: MoUs by Implementing College / Unit -->
+          <div class="panel-card p-4 lg:col-span-5 flex flex-col justify-between">
+            <div class="mb-3">
+              <h2 class="text-sm font-bold text-white">MoUs by Implementing College / Unit</h2>
+              <p class="text-[11px] text-slate-400">Distribution across UR Central Administration &amp; Constituent Colleges • Click to cross-filter</p>
+            </div>
+            <div id="chartCollegeDistribution" class="w-full h-64 sm:h-72"></div>
+          </div>
+        </div>
+
+        <!-- Row 2 Charts: 3-Column Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <!-- Chart 3: Top 10 Partner Countries -->
+          <div class="panel-card p-4 flex flex-col justify-between">
+            <div class="mb-3">
+              <h2 class="text-sm font-bold text-white">Top 10 Partner Countries</h2>
+              <p class="text-[11px] text-slate-400">Leading bilateral academic &amp; institutional hubs</p>
+            </div>
+            <div id="chartTopCountries" class="w-full h-64"></div>
+          </div>
+
+          <!-- Chart 4: Portfolio Lifecycle & Alert Status -->
+          <div class="panel-card p-4 flex flex-col justify-between">
+            <div class="mb-3">
+              <h2 class="text-sm font-bold text-white">Portfolio Lifecycle &amp; Alert Status</h2>
+              <p class="text-[11px] text-slate-400">Workflow status &amp; expiry risk distribution</p>
+            </div>
+            <div id="chartLifecycleDonut" class="w-full h-64"></div>
+          </div>
+
+          <!-- Chart 5: Strategic Areas of Collaboration -->
+          <div class="panel-card p-4 md:col-span-2 xl:col-span-1 flex flex-col justify-between">
+            <div class="mb-3">
+              <h2 class="text-sm font-bold text-white">Strategic Areas of Collaboration</h2>
+              <p class="text-[11px] text-slate-400">Thematic alignment across UR strategic pillars</p>
+            </div>
+            <div id="chartThematicAreas" class="w-full h-64"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Section: Executive Renewal Watchlist -->
+        <div class="panel-card overflow-hidden">
+          <div class="p-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm font-bold text-white">Executive Renewal Watchlist — Expiring Within 6 Months &amp; Special Governance Remarks</h2>
+              <p class="text-[11px] text-slate-400">Click any partnership row to inspect full focal points, dates, and collaboration scope</p>
+            </div>
+            <button onclick="switchTab('register')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-colors self-start sm:self-auto">
+              View All <span id="watchlistBtnTotal">823</span> Records &rarr;
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-[#0b1222] text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th class="py-2.5 px-4 w-12">#</th>
+                  <th class="py-2.5 px-4">Partner Institution</th>
+                  <th class="py-2.5 px-4">Country</th>
+                  <th class="py-2.5 px-4">Unit</th>
+                  <th class="py-2.5 px-4">Start Date</th>
+                  <th class="py-2.5 px-4">End Date</th>
+                  <th class="py-2.5 px-4">UR Focal Point</th>
+                  <th class="py-2.5 px-4">Alert / Remark</th>
+                </tr>
+              </thead>
+              <tbody id="watchlistTableBody" class="divide-y divide-slate-800/70 text-xs">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 2: EXPIRY & RENEWAL ALERTS ==================== -->
+      <div id="view-alerts" class="hidden space-y-4">
+        <div class="panel-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              Expiry &amp; Renewal Governance Pipeline
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Proactive lifecycle monitoring for agreements expiring within 180 days or recently lapsed requiring renewal action.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="alertsViewSummary" class="px-3 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-semibold">16 Expiring Soon</span>
+          </div>
+        </div>
+
+        <div class="panel-card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-[#0b1222] text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th class="py-3 px-4">Urgency</th>
+                  <th class="py-3 px-4">Partner Institution</th>
+                  <th class="py-3 px-4">Country</th>
+                  <th class="py-3 px-4">College / Unit</th>
+                  <th class="py-3 px-4">End Date</th>
+                  <th class="py-3 px-4">Days Remaining</th>
+                  <th class="py-3 px-4">UR Focal Point</th>
+                  <th class="py-3 px-4 text-right">Governance Action</th>
+                </tr>
+              </thead>
+              <tbody id="alertsTableBody" class="divide-y divide-slate-800/70 text-xs"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 3: MASTER MOU REGISTER ==================== -->
+      <div id="view-register" class="hidden space-y-4">
+        <div class="panel-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-bold text-white">Master Institutional MoU Register</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Complete searchable, sortable, and editable repository. Click any row to inspect or update agreement governance details.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openFormModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center gap-1.5">
+              + Add Agreement
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-[#0b1222] text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('id')">ID &#8597;</th>
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('partner')">Partner Institution &#8597;</th>
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('country')">Country &#8597;</th>
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('unit')">Unit &#8597;</th>
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('theme')">Thematic Focus &#8597;</th>
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('startDate')">Signed &#8597;</th>
+                  <th class="py-3 px-4 cursor-pointer hover:text-white" onclick="sortRegister('endDate')">End Date &#8597;</th>
+                  <th class="py-3 px-4">Lifecycle Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="registerTableBody" class="divide-y divide-slate-800/70 text-xs"></tbody>
+            </table>
+          </div>
+          <!-- Pagination Controls -->
+          <div class="p-3.5 border-t border-slate-800 bg-[#0b1222] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
+            <div id="registerPaginationInfo">Showing 1–25 of 823 records</div>
+            <div class="flex items-center gap-1.5">
+              <button id="prevPageBtn" onclick="changePage(-1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200">Previous</button>
+              <span id="pageIndicator" class="px-2.5 py-1 font-semibold text-white">Page 1</span>
+              <button id="nextPageBtn" onclick="changePage(1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 4: FUNDED COMMITMENTS ==================== -->
+      <div id="view-funded" class="hidden space-y-4">
+        <div class="panel-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+              Disclosed Grant &amp; Financial Commitments Portfolio
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Partnerships with explicit external research grants, scholarship endowments, or institutional co-financing.</p>
+          </div>
+          <div id="fundedPortfolioTotals" class="flex items-center gap-2 flex-wrap"></div>
+        </div>
+
+        <div class="panel-card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-[#0b1222] text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th class="py-3 px-4">Partner Institution</th>
+                  <th class="py-3 px-4">Country</th>
+                  <th class="py-3 px-4">Implementing Unit</th>
+                  <th class="py-3 px-4">Thematic Focus</th>
+                  <th class="py-3 px-4">Disclosed Value</th>
+                  <th class="py-3 px-4">Period</th>
+                  <th class="py-3 px-4">UR Focal Point</th>
+                </tr>
+              </thead>
+              <tbody id="fundedTableBody" class="divide-y divide-slate-800/70 text-xs"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 5: STRATEGIC ANALYTICS & FORECASTING ==================== -->
+      <div id="view-strategic" class="hidden space-y-4">
+        <div class="panel-card p-4">
+          <h2 class="text-base font-bold text-white">Long-Term Strategic Utilization &amp; M&amp;E Benchmarking</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Multi-year partnership maturation, regional balance, and upcoming renewal workload forecasting for IURDAS leadership.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="panel-card p-4">
+            <h3 class="text-sm font-bold text-white mb-1">Regional Footprint Breakdown</h3>
+            <p class="text-[11px] text-slate-400 mb-3">Distribution of filtered agreements across continental regions</p>
+            <div id="chartRegionalBreakdown" class="w-full h-64"></div>
+          </div>
+
+          <div class="panel-card p-4">
+            <h3 class="text-sm font-bold text-white mb-1">Upcoming Renewal Horizon (2026–2030)</h3>
+            <p class="text-[11px] text-slate-400 mb-3">Projected fixed-term expirations requiring forward renewal planning</p>
+            <div id="chartRenewalHorizon" class="w-full h-64"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ==================== MODAL 1: PARTNERSHIP DOSSIER INSPECTOR ==================== -->
+  <div id="inspectorModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#0f172a] border border-slate-700 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden animate-fadeIn">
+      <div class="px-5 py-4 bg-[#0b1324] border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <span id="inspIdBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">MOU-001</span>
+          <h3 id="inspPartnerTitle" class="text-base font-bold text-white mt-1">Partner Institution</h3>
+        </div>
+        <button onclick="closeInspectorModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="inspectorBody" class="p-5 space-y-4 text-xs max-h-[75vh] overflow-y-auto">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="px-5 py-3.5 bg-[#0b1324] border-t border-slate-800 flex items-center justify-between gap-2">
+        <button id="inspDeleteBtn" class="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-semibold text-xs">Delete Record</button>
+        <div class="flex items-center gap-2">
+          <button id="inspEditBtn" class="px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs">Edit Agreement</button>
+          <button onclick="closeInspectorModal()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: ADD / EDIT MOU FORM ==================== -->
+  <div id="formModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#0f172a] border border-slate-700 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 bg-[#0b1324] border-b border-slate-800 flex items-center justify-between">
+        <h3 id="formModalTitle" class="text-base font-bold text-white">Register New Institutional MoU</h3>
+        <button onclick="closeFormModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="mouForm" onsubmit="saveMouForm(event)" class="p-5 space-y-3.5 text-xs max-h-[78vh] overflow-y-auto">
+        <input type="hidden" id="formRecordId" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div class="sm:col-span-2">
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Partner Institution / Organization *</label>
+            <input id="formPartner" required type="text" placeholder="e.g., Karolinska Institutet" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Partner Country *</label>
+            <input id="formCountry" required type="text" placeholder="e.g., Sweden or Rwanda" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Region / Continent *</label>
+            <select id="formRegion" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+              <option value="Africa">Africa</option>
+              <option value="Europe">Europe</option>
+              <option value="North America">North America</option>
+              <option value="Asia-Pacific">Asia-Pacific</option>
+              <option value="Middle East & Global">Middle East &amp; Global</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Implementing College / Unit *</label>
+            <select id="formUnit" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+              <option value="UR CENTRAL">UR CENTRAL</option>
+              <option value="CST">CST (Science &amp; Technology)</option>
+              <option value="CMHS">CMHS (Medicine &amp; Health Sciences)</option>
+              <option value="CASS">CASS (Arts &amp; Social Sciences)</option>
+              <option value="CAVM">CAVM (Agriculture &amp; Vet Medicine)</option>
+              <option value="CBE">CBE (Business &amp; Economics)</option>
+              <option value="CE">CE (Education)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Thematic Focus *</label>
+            <select id="formTheme" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+              <option value="Joint Research & Innovation">Joint Research &amp; Innovation</option>
+              <option value="Student & Staff Mobility">Student &amp; Staff Mobility</option>
+              <option value="Health & Clinical Training">Health &amp; Clinical Training</option>
+              <option value="ICT, AI & Digital Transformation">ICT, AI &amp; Digital Transformation</option>
+              <option value="Agriculture & Climate Resilience">Agriculture &amp; Climate Resilience</option>
+              <option value="TVET, Policy & Capacity Building">TVET, Policy &amp; Capacity Building</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Signing / Start Date *</label>
+            <input id="formStartDate" required type="date" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">End Date (Leave blank if Open-Ended)</label>
+            <input id="formEndDate" type="date" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Workflow Status</label>
+            <select id="formStatus" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+              <option value="Active / In Execution">Active / In Execution</option>
+              <option value="Open-Ended Active">Open-Ended Active</option>
+              <option value="Under Renewal Review">Under Renewal Review</option>
+              <option value="Completed">Completed</option>
+              <option value="Expired">Expired</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">UR Focal Point</label>
+            <input id="formFocalPoint" type="text" placeholder="e.g., Prof. J. Mugabo (DVC-SPA)" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Disclosed Grant Amount (Numeric)</label>
+            <input id="formGrantAmount" type="number" step="any" min="0" placeholder="0" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Currency</label>
+            <select id="formCurrency" class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+              <option value="USD">USD ($)</option>
+              <option value="RWF">RWF</option>
+              <option value="EUR">EUR (€)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Governance Remarks &amp; Collaboration Scope</label>
+            <textarea id="formRemark" rows="2" placeholder="Describe key deliverables, renewal notes, or strategic alignment..." class="w-full bg-[#090f1d] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none"></textarea>
+          </div>
+        </div>
+        <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
+          <button type="button" onclick="closeFormModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">Save Agreement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION ENGINE ==================== -->
+  <script>
+    // Reference Current Date for Lifecycle Engine (Nov 14, 2026)
+    const REFERENCE_DATE = new Date('2026-11-14T00:00:00');
+    const STORAGE_KEY = 'iurdas_mou_portal_v2';
+
+    const COLLEGES = ['ALL UR', 'UR CENTRAL', 'CST', 'CMHS', 'CASS', 'CAVM', 'CBE', 'CE'];
+    const THEMES = [
+      'Joint Research & Innovation',
+      'Student & Staff Mobility',
+      'Health & Clinical Training',
+      'ICT, AI & Digital Transformation',
+      'Agriculture & Climate Resilience',
+      'TVET, Policy & Capacity Building'
+    ];
+
+    // Global State
+    let masterDataset = [];
+    let filteredDataset = [];
+    let activeTab = 'overview';
+    let selectedCollege = 'ALL UR';
+    let currentPage = 1;
+    const pageSize = 20;
+    let sortConfig = { key: 'endDate', dir: 'asc' };
+    let dataSourceName = 'UR Baseline Repository (823)';
+
+    // =========================================================================
+    // 1. CALIBRATED BASELINE DATASET GENERATOR (EXACT 823 AGREEMENTS)
+    // =========================================================================
+    function generateBaselineDataset() {
+      // Deterministic PRNG so the 823 baseline dataset is consistent, rich, and exact
+      let seed = 20261114;
+      function rand() {
+        seed = (seed * 1664525 + 1013904223) % 4294967296;
+        return seed / 4294967296;
+      }
+      function pick(arr) { return arr[Math.floor(rand() * arr.length)]; }
+
+      const rwandaPartners = [
+        'Rwanda Biomedical Centre (RBC)', 'Rwanda Information Society Authority (RISA)',
+        'Rwanda Agriculture and Animal Resources Development Board (RAB)', 'MINEDUC Strategic Unit',
+        'Rwanda Development Board (RDB)', 'King Faisal Hospital Kigali', 'Rwanda Polytechnic (RP)',
+        'National Industrial Research and Development Agency (NIRDA)', 'Rwanda Environment Management Authority (REMA)',
+        'Bank of Kigali Foundation', 'Carnegie Mellon University Africa (Kigali)', 'African Institute for Mathematical Sciences (AIMS Rwanda)',
+        'University Teaching Hospital of Kigali (CHUK)', 'University Teaching Hospital of Butare (CHUB)',
+        'Rwanda Space Agency (RSA)', 'NCST Rwanda', 'Rwanda Governance Board (RGB)', 'Inkomoko Entrepreneur Development'
+      ];
+
+      // 67 International Countries + Rwanda = 68 Total Partner Countries
+      const intlCountries = [
+        { country: 'United States', region: 'North America', insts: ['Harvard T.H. Chan School of Public Health', 'MIT D-Lab', 'Michigan State University', 'University of Michigan', 'Tufts University', 'Columbia University', 'Arizona State University', 'University of Florida'] },
+        { country: 'Sweden', region: 'Europe', insts: ['Karolinska Institutet', 'Uppsala University', 'Lund University', 'Swedish University of Agricultural Sciences (SLU)', 'University of Gothenburg', 'KTH Royal Institute of Technology'] },
+        { country: 'United Kingdom', region: 'Europe', insts: ['University of Oxford', 'London School of Hygiene & Tropical Medicine', 'University of Edinburgh', 'University of Leeds', 'King’s College London', 'University of Manchester'] },
+        { country: 'Germany', region: 'Europe', insts: ['TU Dresden', 'University of Bonn', 'Heidelberg University', 'DAAD Academic Exchange', 'GIZ Rwanda Technical Hub', 'University of Freiburg'] },
+        { country: 'Belgium', region: 'Europe', insts: ['KU Leuven', 'Ghent University', 'UCLouvain', 'VLIR-UOS Partnership Consortium', 'University of Antwerp'] },
+        { country: 'South Africa', region: 'Africa', insts: ['University of Cape Town', 'University of the Witwatersrand', 'Stellenbosch University', 'University of Pretoria', 'University of KwaZulu-Natal'] },
+        { country: 'Kenya', region: 'Africa', insts: ['University of Nairobi', 'Kenyatta University', 'Strathmore University', 'Jomo Kenyatta University (JKUAT)', 'ILRI Nairobi'] },
+        { country: 'Uganda', region: 'Africa', insts: ['Makerere University', 'Mbarara University of Science & Technology', 'Kyambogo University', 'IUCEA Secretariat'] },
+        { country: 'Netherlands', region: 'Europe', insts: ['Wageningen University & Research', 'Maastricht University', 'Utrecht University', 'IHE Delft Institute for Water Education'] },
+        { country: 'Canada', region: 'North America', insts: ['McGill University', 'University of Toronto', 'University of British Columbia', 'Dalhousie University'] },
+        { country: 'China', region: 'Asia-Pacific', insts: ['Chongqing Normal University', 'Tsinghua University', 'Zhejiang University', 'Beijing Jiaotong University'] },
+        { country: 'Japan', region: 'Asia-Pacific', insts: ['University of Tokyo', 'Hiroshima University', 'JICA Research Institute', 'Kyoto University'] },
+        { country: 'France', region: 'Europe', insts: ['IRD France', 'Sorbonne Université', 'CIRAD Agricultural Research', 'Sciences Po Paris'] },
+        { country: 'India', region: 'Asia-Pacific', insts: ['IIT Madras', 'Manipal Academy of Higher Education', 'Jawaharlal Nehru University'] },
+        { country: 'Tanzania', region: 'Africa', insts: ['University of Dar es Salaam', 'Sokoine University of Agriculture', 'Nelson Mandela African Institution'] },
+        { country: 'Ethiopia', region: 'Africa', insts: ['Addis Ababa University', 'Jimma University'] },
+        { country: 'Nigeria', region: 'Africa', insts: ['University of Ibadan', 'Covenant University'] },
+        { country: 'Ghana', region: 'Africa', insts: ['University of Ghana', 'KNUST Kumasi'] },
+        { country: 'Norway', region: 'Europe', insts: ['University of Bergen', 'Norwegian University of Life Sciences (NMBU)'] },
+        { country: 'Switzerland', region: 'Europe', insts: ['ETH Zurich', 'Swiss Tropical and Public Health Institute (Swiss TPH)'] },
+        { country: 'Italy', region: 'Europe', insts: ['Sapienza University of Rome', 'University of Bologna'] },
+        { country: 'Spain', region: 'Europe', insts: ['University of Barcelona', 'Universidad Autónoma de Madrid'] },
+        { country: 'South Korea', region: 'Asia-Pacific', insts: ['KAIST', 'Seoul National University'] },
+        { country: 'Australia', region: 'Asia-Pacific', insts: ['University of Melbourne', 'Australian National University'] },
+        { country: 'Brazil', region: 'North America', insts: ['University of São Paulo', 'EMBRAPA'] }
+      ];
+
+      const extraCountries = [
+        ['Egypt', 'Africa'], ['Morocco', 'Africa'], ['Senegal', 'Africa'], ['Zambia', 'Africa'], ['Malawi', 'Africa'],
+        ['Botswana', 'Africa'], ['Namibia', 'Africa'], ['Burundi', 'Africa'], ['DR Congo', 'Africa'], ['Cameroon', 'Africa'],
+        ['Côte d’Ivoire', 'Africa'], ['Tunisia', 'Africa'], ['Mozambique', 'Africa'], ['Zimbabwe', 'Africa'], ['Mauritius', 'Africa'],
+        ['Finland', 'Europe'], ['Denmark', 'Europe'], ['Austria', 'Europe'], ['Poland', 'Europe'], ['Portugal', 'Europe'],
+        ['Ireland', 'Europe'], ['Czech Republic', 'Europe'], ['Hungary', 'Europe'], ['Greece', 'Europe'], ['Turkey', 'Europe'],
+        ['Singapore', 'Asia-Pacific'], ['Malaysia', 'Asia-Pacific'], ['Thailand', 'Asia-Pacific'], ['Indonesia', 'Asia-Pacific'], ['Vietnam', 'Asia-Pacific'],
+        ['New Zealand', 'Asia-Pacific'], ['Philippines', 'Asia-Pacific'], ['United Arab Emirates', 'Middle East & Global'], ['Qatar', 'Middle East & Global'],
+        ['Saudi Arabia', 'Middle East & Global'], ['Jordan', 'Middle East & Global'], ['Israel', 'Middle East & Global'], ['Mexico', 'North America'],
+        ['Chile', 'North America'], ['Colombia', 'North America'], ['Argentina', 'North America'], ['Costa Rica', 'North America']
+      ];
+
+      const focalPoints = [
+        'Prof. J. Mugabo (DVC-SPA)', 'Dr. A. Uwimana (CST)', 'Prof. P. Kyamanywa (CMHS)',
+        'Dr. E. Niyonzima (CAVM)', 'Dr. C. Mukamana (CBE)', 'Prof. G. Ndagijimana (CASS)',
+        'Dr. F. Habimana (CE)', 'Ms. D. Ingabire (IURDAS)', 'Dr. S. Rutayisire (Research Directorate)',
+        'Prof. R. Kayumba (Grants Office)'
+      ];
+
+      // Target counts matching executive dashboard benchmarks:
+      // Total: 823 | Domestic (Rwanda): 329 (40.0%) | International: 494 (60.0%)
+      // Open-Ended: 140 | Fixed-Term: 683
+      // Active Workflow: 272 (33.0%) | Expiring (<6 Mo): 16 | Partner Countries: 68
+      // Funded: 50 (~$6.4M+ & 1.77B RWF)
+      const totalTarget = 823;
+      const domesticTarget = 329;
+      const openEndedTarget = 140;
+      const expiringTarget = 16;
+      const activeFixedTarget = 272 - openEndedTarget; // 132 fixed-term active + 140 open-ended active = 272 active
+      const fundedTarget = 50;
+
+      const records = [];
+      const unitsWeighted = ['UR CENTRAL', 'UR CENTRAL', 'CST', 'CST', 'CMHS', 'CMHS', 'CAVM', 'CASS', 'CBE', 'CE'];
+      const yearsWeighted = [
+        2010, 2011, 2012, 2012, 2013, 2013, 2014, 2014, 2015, 2015, 2015,
+        2016, 2016, 2016, 2017, 2017, 2017, 2018, 2018, 2018, 2018,
+        2019, 2019, 2019, 2019, 2020, 2020, 2020, 2021, 2021, 2021, 2021,
+        2022, 2022, 2022, 2022, 2022, 2023, 2023, 2023, 2023, 2023,
+        2024, 2024, 2024, 2024, 2024, 2025, 2025, 2025, 2025, 2026, 2026, 2026
+      ];
+
+      for (let i = 0; i < totalTarget; i++) {
+        const isDomestic = i < domesticTarget;
+        let country = 'Rwanda';
+        let region = 'Africa';
+        let partner = '';
+
+        if (isDomestic) {
+          const base = rwandaPartners[i % rwandaPartners.length];
+          const suffix = i >= rwandaPartners.length ? ` — Phase ${Math.floor(i / rwandaPartners.length) + 1}` : '';
+          partner = base + suffix;
+        } else {
+          const intlIdx = i - domesticTarget;
+          if (intlIdx < extraCountries.length) {
+            country = extraCountries[intlIdx][0];
+            region = extraCountries[intlIdx][1];
+            partner = `${country} National University & Research Consortium`;
+          } else {
+            const cObj = intlCountries[intlIdx % intlCountries.length];
+            country = cObj.country;
+            region = cObj.region;
+            const inst = cObj.insts[Math.floor(intlIdx / intlCountries.length) % cObj.insts.length];
+            const cycle = Math.floor(intlIdx / (intlCountries.length * 4));
+            partner = cycle > 0 ? `${inst} (Joint Program ${cycle + 1})` : inst;
+          }
+        }
+
+        const unit = unitsWeighted[i % unitsWeighted.length];
+        const theme = THEMES[i % THEMES.length];
+        const focalPoint = focalPoints[i % focalPoints.length];
+
+        // Determine lifecycle bucket deterministically
+        let isOpenEnded = false;
+        let startDate = '';
+        let endDate = '';
+        let status = 'Completed';
+        let remark = 'Standard institutional collaboration framework.';
+
+        if (i < expiringTarget) {
+          // 16 Expiring Soon (<6 Months from 2026-11-14 -> between 2026-11-25 and 2027-05-05)
+          const daysOut = 12 + (i * 10);
+          const endDt = new Date(REFERENCE_DATE.getTime() + daysOut * 86400000);
+          const startDt = new Date(endDt.getFullYear() - 5, endDt.getMonth(), endDt.getDate());
+          startDate = startDt.toISOString().slice(0, 10);
+          endDate = endDt.toISOString().slice(0, 10);
+          status = 'Under Renewal Review';
+          remark = daysOut <= 90
+            ? `CRITICAL: Expires in ${daysOut} days. DVC-SPA renewal dossier initiated.`
+            : `Renewal window open (${daysOut} days left). Joint M&E evaluation underway.`;
+        } else if (i < expiringTarget + openEndedTarget) {
+          // 140 Open-Ended Active
+          isOpenEnded = true;
+          const yr = yearsWeighted[(i * 3) % yearsWeighted.length];
+          const mo = String((i % 12) + 1).padStart(2, '0');
+          const dy = String(((i * 7) % 27) + 1).padStart(2, '0');
+          startDate = `${yr}-${mo}-${dy}`;
+          endDate = '';
+          status = 'Open-Ended Active';
+          remark = 'Perpetual framework agreement; subject to quinquennial strategic review.';
+        } else if (i < expiringTarget + openEndedTarget + activeFixedTarget) {
+          // 132 Fixed-Term Active (>6 Months remaining, ending 2027-06 to 2030-12)
+          const yr = 2022 + (i % 5);
+          const mo = String((i % 12) + 1).padStart(2, '0');
+          const dy = String(((i * 5) % 27) + 1).padStart(2, '0');
+          startDate = `${yr}-${mo}-${dy}`;
+          endDate = `${yr + 5}-${mo}-${dy}`;
+          status = 'Active / In Execution';
+          remark = 'Active implementation phase with annual joint steering committee reporting.';
+        } else {
+          // Remaining 535 Completed / Historical Fixed-Term (2010–2025)
+          const yr = 2010 + (i % 12);
+          const mo = String((i % 12) + 1).padStart(2, '0');
+          const dy = String(((i * 3) % 27) + 1).padStart(2, '0');
+          startDate = `${yr}-${mo}-${dy}`;
+          endDate = `${yr + 4}-${mo}-${dy}`;
+          status = yr >= 2021 ? 'Expired' : 'Completed';
+          remark = status === 'Expired'
+            ? 'Term elapsed; eligible for successor MoU negotiation.'
+            : 'Successfully concluded initial cooperation cycle.';
+        }
+
+        // Assign 50 Funded Agreements (~$6.42M USD + 1.77B RWF)
+        let grantAmount = 0;
+        let currency = 'USD';
+        if (i < fundedTarget) {
+          if (i % 5 === 0) {
+            // 10 RWF-denominated national grants totaling ~1.77B RWF
+            currency = 'RWF';
+            grantAmount = 177000000; // 10 * 177M = 1.77B RWF
+          } else {
+            // 40 USD-denominated international grants totaling ~$6.44M USD
+            currency = 'USD';
+            grantAmount = 161000; // 40 * 161,000 = $6,440,000 (~$6.4M+)
+          }
+          remark = `Funded commitment (${currency === 'USD' ? '$' + grantAmount.toLocaleString() : (grantAmount / 1e6).toFixed(1) + 'M RWF'}). ` + remark;
+        }
+
+        records.push({
+          id: `MOU-${String(i + 1).padStart(4, '0')}`,
+          partner,
+          country,
+          region,
+          unit,
+          theme,
+          startDate,
+          endDate,
+          isOpenEnded,
+          status,
+          focalPoint,
+          grantAmount,
+          currency,
+          remark
+        });
+      }
+
+      return records;
+    }
+
+    // =========================================================================
+    // 2. LIFECYCLE & EXPIRY EVALUATION ENGINE
+    // =========================================================================
+    function evaluateLifecycle(rec) {
+      if (rec.isOpenEnded || !rec.endDate || rec.endDate.trim() === '') {
+        return {
+          code: 'OPEN_ENDED',
+          label: 'Open-Ended',
+          daysRemaining: null,
+          badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/30'
+        };
+      }
+      const end = new Date(rec.endDate + 'T00:00:00');
+      if (isNaN(end.getTime())) {
+        return {
+          code: 'OPEN_ENDED',
+          label: 'Open-Ended',
+          daysRemaining: null,
+          badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/30'
+        };
+      }
+      const diffDays = Math.ceil((end - REFERENCE_DATE) / 86400000);
+      if (diffDays < 0) {
+        return {
+          code: 'EXPIRED',
+          label: rec.status === 'Completed' ? 'Completed' : 'Expired',
+          daysRemaining: diffDays,
+          badgeClass: rec.status === 'Completed'
+            ? 'bg-slate-700/70 text-slate-300 border-slate-600'
+            : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+        };
+      }
+      if (diffDays <= 90) {
+        return {
+          code: 'CRITICAL_90D',
+          label: `Critical (${diffDays}d)`,
+          daysRemaining: diffDays,
+          badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+        };
+      }
+      if (diffDays <= 183) {
+        return {
+          code: 'EXPIRING_6M',
+          label: `Expiring (${diffDays}d)`,
+          daysRemaining: diffDays,
+          badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+        };
+      }
+      return {
+        code: 'HEALTHY',
+        label: 'Active (>6 Mo)',
+        daysRemaining: diffDays,
+        badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+      };
+    }
+
+    // =========================================================================
+    // 3. PERSISTENCE & INITIALIZATION
+    // =========================================================================
+    function initPortal() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed.records) && parsed.records.length > 0) {
+            masterDataset = parsed.records;
+            dataSourceName = parsed.sourceName || `Saved Repository (${masterDataset.length})`;
+          }
+        }
+      } catch (e) {
+        console.warn('LocalStorage read fallback:', e);
+      }
+
+      if (masterDataset.length === 0) {
+        masterDataset = generateBaselineDataset();
+        dataSourceName = 'UR Baseline Repository (823)';
+      }
+
+      renderCollegePills();
+      populateFilterDropdowns();
+      applyFilters();
+
+      // Setup CSV File Listener
+      document.getElementById('csvFileInput').addEventListener('change', handleCSVFileSelect);
+    }
+
+    function persistToLocalStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          sourceName: dataSourceName,
+          updatedAt: new Date().toISOString(),
+          records: masterDataset
+        }));
+        document.getElementById('storageModeLabel').textContent = 'Local Vault Synced';
+      } catch (e) {
+        document.getElementById('storageModeLabel').textContent = 'Session Memory Mode';
+      }
+    }
+
+    function restoreBaselineDataset() {
+      masterDataset = generateBaselineDataset();
+      dataSourceName = 'UR Baseline Repository (823)';
+      persistToLocalStorage();
+      resetAllFilters();
+      showToast('Restored calibrated UR baseline dataset (823 agreements).', 'success');
+    }
+
+    // =========================================================================
+    // 4. FILTERING, SEARCH & CROSS-INTERACTION
+    // =========================================================================
+    function renderCollegePills() {
+      const container = document.getElementById('collegePillsContainer');
+      container.innerHTML = COLLEGES.map(col => {
+        const active = selectedCollege === col;
+        return `<button onclick="selectCollegePill('${col}')" class="px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide transition-all ${
+          active
+            ? 'bg-sky-500 text-slate-950 shadow-sm shadow-sky-500/30'
+            : 'bg-[#10192e] hover:bg-slate-800 text-slate-300 border border-slate-700/80'
+        }">${col}</button>`;
+      }).join('');
+    }
+
+    function selectCollegePill(col) {
+      selectedCollege = col;
+      currentPage = 1;
+      renderCollegePills();
+      applyFilters();
+    }
+
+    function populateFilterDropdowns() {
+      // Years
+      const years = [...new Set(masterDataset.map(r => (r.startDate || '').slice(0, 4)).filter(Boolean))].sort((a, b) => b - a);
+      const yearSel = document.getElementById('filterYear');
+      const curYear = yearSel.value;
+      yearSel.innerHTML = `<option value="ALL">All Years (${years[years.length - 1] || '2010'}–${years[0] || '2026'})</option>` +
+        years.map(y => `<option value="${y}">${y}</option>`).join('');
+      if ([...yearSel.options].some(o => o.value === curYear)) yearSel.value = curYear;
+
+      // Regions
+      const regions = [...new Set(masterDataset.map(r => r.region).filter(Boolean))].sort();
+      const regSel = document.getElementById('filterRegion');
+      const curReg = regSel.value;
+      regSel.innerHTML = `<option value="ALL">All Regions</option>` +
+        regions.map(r => `<option value="${r}">${r}</option>`).join('');
+      if ([...regSel.options].some(o => o.value === curReg)) regSel.value = curReg;
+
+      // Countries with counts
+      const countryMap = {};
+      masterDataset.forEach(r => {
+        if (r.country) countryMap[r.country] = (countryMap[r.country] || 0) + 1;
+      });
+      const countries = Object.keys(countryMap).sort((a, b) => countryMap[b] - countryMap[a]);
+      const cSel = document.getElementById('filterCountry');
+      const curC = cSel.value;
+      cSel.innerHTML = `<option value="ALL">All Countries (${countries.length})</option>` +
+        countries.map(c => `<option value="${c}">${c} (${countryMap[c]})</option>`).join('');
+      if ([...cSel.options].some(o => o.value === curC)) cSel.value = curC;
+
+      // Themes
+      const themes = [...new Set(masterDataset.map(r => r.theme).filter(Boolean))].sort();
+      const tSel = document.getElementById('filterTheme');
+      const curT = tSel.value;
+      tSel.innerHTML = `<option value="ALL">All Collaboration Areas</option>` +
+        themes.map(t => `<option value="${t}">${t}</option>`).join('');
+      if ([...tSel.options].some(o => o.value === curT)) tSel.value = curT;
+    }
+
+    function applyFilters() {
+      const fYear = document.getElementById('filterYear').value;
+      const fRegion = document.getElementById('filterRegion').value;
+      const fCountry = document.getElementById('filterCountry').value;
+      const fStatus = document.getElementById('filterStatus').value;
+      const fAlert = document.getElementById('filterAlert').value;
+      const fTheme = document.getElementById('filterTheme').value;
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      filteredDataset = masterDataset.filter(rec => {
+        if (selectedCollege !== 'ALL UR' && rec.unit.toUpperCase() !== selectedCollege) return false;
+        if (fYear !== 'ALL' && !(rec.startDate || '').startsWith(fYear)) return false;
+        if (fRegion !== 'ALL' && rec.region !== fRegion) return false;
+        if (fCountry !== 'ALL' && rec.country !== fCountry) return false;
+        if (fStatus !== 'ALL' && rec.status !== fStatus) return false;
+        if (fTheme !== 'ALL' && rec.theme !== fTheme) return false;
+
+        if (fAlert !== 'ALL') {
+          const lc = evaluateLifecycle(rec);
+          if (fAlert === 'EXPIRING_6M') {
+            if (lc.code !== 'EXPIRING_6M' && lc.code !== 'CRITICAL_90D') return false;
+          } else if (lc.code !== fAlert) {
+            return false;
+          }
+        }
+
+        if (query) {
+          const hay = `${rec.id} ${rec.partner} ${rec.country} ${rec.unit} ${rec.theme} ${rec.focalPoint} ${rec.remark}`.toLowerCase();
+          if (!hay.includes(query)) return false;
+        }
+        return true;
+      });
+
+      currentPage = 1;
+      updateMetricsAndBadges();
+      renderAllCharts();
+      renderTables();
+    }
+
+    function resetAllFilters() {
+      selectedCollege = 'ALL UR';
+      document.getElementById('filterYear').value = 'ALL';
+      document.getElementById('filterRegion').value = 'ALL';
+      document.getElementById('filterCountry').value = 'ALL';
+      document.getElementById('filterStatus').value = 'ALL';
+      document.getElementById('filterAlert').value = 'ALL';
+      document.getElementById('filterTheme').value = 'ALL';
+      document.getElementById('searchInput').value = '';
+      renderCollegePills();
+      applyFilters();
+    }
+
+    function quickFilterStatus(status) {
+      document.getElementById('filterStatus').value = status;
+      applyFilters();
+    }
+
+    function quickFilterAlert(alertCode) {
+      document.getElementById('filterAlert').value = alertCode;
+      applyFilters();
+    }
+
+    function toggleFilterYear(yr) {
+      const sel = document.getElementById('filterYear');
+      sel.value = sel.value === yr ? 'ALL' : yr;
+      applyFilters();
+    }
+
+    function toggleFilterCountry(country) {
+      const sel = document.getElementById('filterCountry');
+      sel.value = sel.value === country ? 'ALL' : country;
+      applyFilters();
+    }
+
+    function toggleFilterTheme(theme) {
+      const sel = document.getElementById('filterTheme');
+      sel.value = sel.value === theme ? 'ALL' : theme;
+      applyFilters();
+    }
+
+    // =========================================================================
+    // 5. KPI & NAVIGATION BADGE CALCULATIONS
+    // =========================================================================
+    function updateMetricsAndBadges() {
+      const total = filteredDataset.length;
+      const openEnded = filteredDataset.filter(r => r.isOpenEnded || !r.endDate).length;
+      const fixedTerm = total - openEnded;
+
+      const activeCount = filteredDataset.filter(r =>
+        r.status === 'Active / In Execution' || r.status === 'Open-Ended Active'
+      ).length;
+      const activePct = total > 0 ? ((activeCount / total) * 100).toFixed(1) : '0.0';
+
+      const expiringItems = filteredDataset.filter(r => {
+        const code = evaluateLifecycle(r).code;
+        return code === 'EXPIRING_6M' || code === 'CRITICAL_90D';
+      });
+
+      const countriesSet = new Set(filteredDataset.map(r => r.country).filter(Boolean));
+      const domesticCount = filteredDataset.filter(r => (r.country || '').toLowerCase() === 'rwanda').length;
+      const domPct = total > 0 ? ((domesticCount / total) * 100).toFixed(1) : '0.0';
+      const intlPct = total > 0 ? (100 - parseFloat(domPct)).toFixed(1) : '0.0';
+
+      // Funded Calculations
+      const fundedItems = filteredDataset.filter(r => Number(r.grantAmount) > 0);
+      let usdTotal = 0;
+      let rwfTotal = 0;
+      fundedItems.forEach(r => {
+        const amt = Number(r.grantAmount) || 0;
+        if (r.currency === 'RWF') rwfTotal += amt;
+        else if (r.currency === 'EUR') usdTotal += amt * 1.08;
+        else usdTotal += amt;
+      });
+
+      const usdLabel = usdTotal >= 1e6 ? `~$${(usdTotal / 1e6).toFixed(1)}M+` : `$${Math.round(usdTotal).toLocaleString()}`;
+      const rwfLabel = rwfTotal >= 1e9 ? `${(rwfTotal / 1e9).toFixed(2)}B RWF` : `${Math.round(rwfTotal / 1e6)}M RWF`;
+      const fundedSummaryText = (usdTotal > 0 && rwfTotal > 0)
+        ? `${usdLabel} & ${rwfLabel}`
+        : usdTotal > 0 ? usdLabel : rwfTotal > 0 ? rwfLabel : 'No Disclosed Grants';
+
+      // Update KPI Cards
+      document.getElementById('kpiTotal').textContent = total.toLocaleString();
+      document.getElementById('kpiOpenEnded').textContent = `${openEnded} Open-Ended`;
+      document.getElementById('kpiFixedTerm').textContent = `${fixedTerm} Fixed-Term`;
+
+      document.getElementById('kpiActive').textContent = activeCount.toLocaleString();
+      document.getElementById('kpiActivePct').textContent = `${activePct}%`;
+
+      document.getElementById('kpiExpiring').textContent = expiringItems.length.toLocaleString();
+
+      document.getElementById('kpiCountries').textContent = countriesSet.size.toLocaleString();
+      document.getElementById('kpiDomesticPct').textContent = `${domPct}% Rwanda`;
+      document.getElementById('kpiIntlPct').textContent = `${intlPct}% Intl`;
+
+      document.getElementById('kpiFundedCount').textContent = fundedItems.length.toLocaleString();
+      document.getElementById('kpiFundedSummary').textContent = fundedSummaryText;
+
+      // Update Sidebar Badges & Text
+      document.getElementById('badgeOverview').textContent = total;
+      document.getElementById('badgeAlerts').textContent = expiringItems.length;
+      document.getElementById('badgeRegister').textContent = total === masterDataset.length ? 'Full' : total;
+      document.getElementById('badgeFunded').textContent = fundedItems.length;
+
+      document.getElementById('filteredCountText').textContent = total.toLocaleString();
+      document.getElementById('totalCountText').textContent = masterDataset.length.toLocaleString();
+      document.getElementById('watchlistBtnTotal').textContent = total.toLocaleString();
+      document.getElementById('activeDataBadge').textContent = dataSourceName;
+    }
+
+    // =========================================================================
+    // 6. INTERACTIVE INLINE SVG CHARTS (ZERO EXTERNAL CDN FAILURES)
+    // =========================================================================
+    const tooltipEl = document.getElementById('chartTooltip');
+
+    function showTooltip(evt, html) {
+      tooltipEl.innerHTML = html;
+      tooltipEl.classList.remove('hidden');
+      const pad = 12;
+      let left = evt.clientX + pad;
+      let top = evt.clientY + pad;
+      if (left + 220 > window.innerWidth) left = evt.clientX - 220;
+      if (top + 80 > window.innerHeight) top = evt.clientY - 80;
+      tooltipEl.style.left = `${left}px`;
+      tooltipEl.style.top = `${top}px`;
+    }
+
+    function hideTooltip() {
+      tooltipEl.classList.add('hidden');
+    }
+
+    function escapeHTML(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    function renderAllCharts() {
+      renderSigningMomentumChart();
+      renderCollegeChart();
+      renderTopCountriesChart();
+      renderLifecycleDonutChart();
+      renderThematicChart();
+      if (activeTab === 'strategic') {
+        renderStrategicCharts();
+      }
+    }
+
+    // Chart 1: Stacked Annual Bar Chart (2010-2026)
+    function renderSigningMomentumChart() {
+      const container = document.getElementById('chartSigningMomentum');
+      const yearStats = {};
+      for (let y = 2010; y <= 2026; y++) yearStats[y] = { dom: 0, intl: 0 };
+
+      filteredDataset.forEach(r => {
+        const y = parseInt((r.startDate || '').slice(0, 4), 10);
+        if (yearStats[y]) {
+          if ((r.country || '').toLowerCase() === 'rwanda') yearStats[y].dom++;
+          else yearStats[y].intl++;
+        }
+      });
+
+      const years = Object.keys(yearStats);
+      const maxVal = Math.max(5, ...years.map(y => yearStats[y].dom + yearStats[y].intl));
+      const W = 680, H = 250, padL = 34, padR = 12, padT = 16, padB = 28;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const colW = plotW / years.length;
+      const barW = Math.max(12, colW * 0.62);
+
+      let gridLines = '';
+      for (let i = 0; i <= 4; i++) {
+        const val = Math.round((maxVal / 4) * i);
+        const yPos = padT + plotH - (plotH * (i / 4));
+        gridLines += `
+          <line x1="${padL}" y1="${yPos}" x2="${W - padR}" y2="${yPos}" stroke="#1e293b" stroke-dasharray="3,3" />
+          <text x="${padL - 6}" y="${yPos + 3}" text-anchor="end" fill="#64748b" font-size="9">${val}</text>
+        `;
+      }
+
+      let bars = '';
+      years.forEach((yr, idx) => {
+        const d = yearStats[yr];
+        const total = d.dom + d.intl;
+        const x = padL + idx * colW + (colW - barW) / 2;
+        const domH = (d.dom / maxVal) * plotH;
+        const intlH = (d.intl / maxVal) * plotH;
+        const domY = padT + plotH - domH;
+        const intlY = domY - intlH;
+        const tip = `<strong>Year ${yr}</strong><br/>Total Signed: <b>${total}</b><br/>Domestic (Rwanda): ${d.dom}<br/>International: ${d.intl}`;
+
+        bars += `
+          <g class="svg-bar" onclick="toggleFilterYear('${yr}')"
+             onmousemove='showTooltip(event, ${JSON.stringify(tip)})'
+             onmouseleave="hideTooltip()">
+            <rect x="${x}" y="${domY}" width="${barW}" height="${Math.max(0, domH)}" fill="#0ea5e9" rx="2" />
+            <rect x="${x}" y="${intlY}" width="${barW}" height="${Math.max(0, intlH)}" fill="#10b981" rx="2" />
+            ${total > 0 ? `<text x="${x + barW / 2}" y="${intlY - 4}" text-anchor="middle" fill="#cbd5e1" font-size="8.5" font-weight="600">${total}</text>` : ''}
+            <text x="${x + barW / 2}" y="${H - 10}" text-anchor="middle" fill="#94a3b8" font-size="9">${yr.slice(2)}</text>
+          </g>
+        `;
+      });
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" class="w-full h-full overflow-visible">
+          ${gridLines}
+          ${bars}
+        </svg>
+      `;
+    }
+
+    // Chart 2: Implementing College / Unit Horizontal Bar Chart
+    function renderCollegeChart() {
+      const container = document.getElementById('chartCollegeDistribution');
+      const units = ['UR CENTRAL', 'CST', 'CMHS', 'CAVM', 'CASS', 'CBE', 'CE'];
+      const counts = units.map(u => ({
+        unit: u,
+        count: filteredDataset.filter(r => r.unit.toUpperCase() === u).length
+      })).sort((a, b) => b.count - a.count);
+
+      const maxVal = Math.max(1, ...counts.map(c => c.count));
+      const total = Math.max(1, filteredDataset.length);
+      const W = 460, H = 250, padL = 86, padR = 54, padT = 10, padB = 12;
+      const rowH = (H - padT - padB) / counts.length;
+      const barH = Math.min(20, rowH * 0.62);
+
+      const rows = counts.map((item, idx) => {
+        const y = padT + idx * rowH + (rowH - barH) / 2;
+        const w = ((W - padL - padR) * item.count) / maxVal;
+        const pct = ((item.count / total) * 100).toFixed(1);
+        const tip = `<strong>${item.unit}</strong><br/>Agreements: <b>${item.count}</b> (${pct}%)`;
+        return `
+          <g class="svg-bar" onclick="selectCollegePill('${item.unit === selectedCollege ? 'ALL UR' : item.unit}')"
+             onmousemove='showTooltip(event, ${JSON.stringify(tip)})'
+             onmouseleave="hideTooltip()">
+            <text x="${padL - 8}" y="${y + barH / 2 + 3.5}" text-anchor="end" fill="#cbd5e1" font-size="10" font-weight="600">${item.unit}</text>
+            <rect x="${padL}" y="${y}" width="${W - padL - padR}" height="${barH}" fill="#162036" rx="4" />
+            <rect x="${padL}" y="${y}" width="${Math.max(2, w)}" height="${barH}" fill="#0ea5e9" rx="4" />
+            <text x="${padL + Math.max(2, w) + 6}" y="${y + barH / 2 + 3.5}" fill="#f8fafc" font-size="10" font-weight="700">${item.count} <tspan fill="#64748b" font-weight="400">(${pct}%)</tspan></text>
+          </g>
+        `;
+      }).join('');
+
+      container.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="w-full h-full">${rows}</svg>`;
+    }
+
+    // Chart 3: Top 10 Partner Countries
+    function renderTopCountriesChart() {
+      const container = document.getElementById('chartTopCountries');
+      const map = {};
+      filteredDataset.forEach(r => {
+        if (r.country) map[r.country] = (map[r.country] || 0) + 1;
+      });
+      const top10 = Object.entries(map)
+        .map(([country, count]) => ({ country, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
+
+      if (top10.length === 0) {
+        container.innerHTML = `<div class="h-full flex items-center justify-center text-xs text-slate-500">No country data matches active filters</div>`;
+        return;
+      }
+
+      const maxVal = Math.max(1, top10[0].count);
+      const W = 400, H = 240, padL = 96, padR = 36, padT = 6, padB = 6;
+      const rowH = (H - padT - padB) / top10.length;
+      const barH = Math.min(14, rowH * 0.65);
+
+      const rows = top10.map((item, idx) => {
+        const y = padT + idx * rowH + (rowH - barH) / 2;
+        const w = ((W - padL - padR) * item.count) / maxVal;
+        const color = item.country === 'Rwanda' ? '#0ea5e9' : '#8b5cf6';
+        const tip = `<strong>#${idx + 1} ${escapeHTML(item.country)}</strong><br/>Signed MoUs: <b>${item.count}</b>`;
+        return `
+          <g class="svg-bar" onclick="toggleFilterCountry(${JSON.stringify(item.country)})"
+             onmousemove='showTooltip(event, ${JSON.stringify(tip)})'
+             onmouseleave="hideTooltip()">
+            <text x="${padL - 8}" y="${y + barH / 2 + 3}" text-anchor="end" fill="#cbd5e1" font-size="9.5" font-weight="500">${escapeHTML(item.country.length > 14 ? item.country.slice(0, 13) + '…' : item.country)}</text>
+            <rect x="${padL}" y="${y}" width="${W - padL - padR}" height="${barH}" fill="#162036" rx="3" />
+            <rect x="${padL}" y="${y}" width="${Math.max(3, w)}" height="${barH}" fill="${color}" rx="3" />
+            <text x="${padL + Math.max(3, w) + 6}" y="${y + barH / 2 + 3}" fill="#e2e8f0" font-size="9.5" font-weight="700">${item.count}</text>
+          </g>
+        `;
+      }).join('');
+
+      container.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="w-full h-full">${rows}</svg>`;
+    }
+
+    // Chart 4: Portfolio Lifecycle & Alert Status Donut
+    function renderLifecycleDonutChart() {
+      const container = document.getElementById('chartLifecycleDonut');
+      const buckets = [
+        { label: 'Active (>6 Mo)', color: '#10b981', count: 0 },
+        { label: 'Open-Ended', color: '#0ea5e9', count: 0 },
+        { label: 'Expiring (<6 Mo)', color: '#f59e0b', count: 0 },
+        { label: 'Completed / Expired', color: '#64748b', count: 0 }
+      ];
+
+      filteredDataset.forEach(r => {
+        const code = evaluateLifecycle(r).code;
+        if (code === 'HEALTHY') buckets[0].count++;
+        else if (code === 'OPEN_ENDED') buckets[1].count++;
+        else if (code === 'EXPIRING_6M' || code === 'CRITICAL_90D') buckets[2].count++;
+        else buckets[3].count++;
+      });
+
+      const total = filteredDataset.length;
+      const cx = 105, cy = 115, r = 74, strokeW = 24;
+      const circ = 2 * Math.PI * r;
+      let offset = 0;
+
+      const arcs = total === 0 ? '' : buckets.map(b => {
+        const frac = b.count / total;
+        const dash = frac * circ;
+        const tip = `<strong>${b.label}</strong><br/>Count: <b>${b.count}</b> (${(frac * 100).toFixed(1)}%)`;
+        const el = `
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="transparent"
+            stroke="${b.color}" stroke-width="${strokeW}"
+            stroke-dasharray="${dash} ${circ - dash}"
+            stroke-dashoffset="${-offset}"
+            transform="rotate(-90 ${cx} ${cy})"
+            class="svg-bar"
+            onmousemove='showTooltip(event, ${JSON.stringify(tip)})'
+            onmouseleave="hideTooltip()" />
+        `;
+        offset += dash;
+        return el;
+      }).join('');
+
+      const legend = buckets.map((b, i) => {
+        const ly = 56 + i * 34;
+        const pct = total > 0 ? ((b.count / total) * 100).toFixed(0) : 0;
+        return `
+          <g transform="translate(205, ${ly})">
+            <rect x="0" y="0" width="10" height="10" rx="2" fill="${b.color}" />
+            <text x="16" y="9" fill="#cbd5e1" font-size="10" font-weight="600">${b.label}</text>
+            <text x="16" y="21" fill="#94a3b8" font-size="9.5">${b.count} (${pct}%)</text>
+          </g>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <svg viewBox="0 0 360 230" class="w-full h-full">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="transparent" stroke="#1e293b" stroke-width="${strokeW}" />
+          ${arcs}
+          <text x="${cx}" y="${cy - 4}" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="800">${total}</text>
+          <text x="${cx}" y="${cy + 12}" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">AGREEMENTS</text>
+          ${legend}
+        </svg>
+      `;
+    }
+
+    // Chart 5: Strategic Areas of Collaboration
+    function renderThematicChart() {
+      const container = document.getElementById('chartThematicAreas');
+      const counts = THEMES.map(t => ({
+        theme: t,
+        count: filteredDataset.filter(r => r.theme === t).length
+      })).sort((a, b) => b.count - a.count);
+
+      const maxVal = Math.max(1, ...counts.map(c => c.count));
+      const total = Math.max(1, filteredDataset.length);
+      const colors = ['#0ea5e9', '#10b981', '#8b5cf6', '#f59e0b', '#14b8a6', '#ec4899'];
+
+      container.innerHTML = `<div class="space-y-2.5 pt-1">` + counts.map((item, idx) => {
+        const pct = ((item.count / total) * 100).toFixed(1);
+        const barPct = ((item.count / maxVal) * 100).toFixed(1);
+        const color = colors[idx % colors.length];
+        return `
+          <div onclick="toggleFilterTheme(${JSON.stringify(item.theme)})" class="cursor-pointer group">
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="text-slate-300 group-hover:text-white font-medium truncate pr-2">${escapeHTML(item.theme)}</span>
+              <span class="text-slate-200 font-bold shrink-0">${item.count} <span class="text-slate-500 font-normal">(${pct}%)</span></span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800/90 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-300" style="width: ${barPct}%; background-color: ${color};"></div>
+            </div>
+          </div>
+        `;
+      }).join('') + `</div>`;
+    }
+
+    // Strategic Tab Charts
+    function renderStrategicCharts() {
+      // Regional Breakdown
+      const regContainer = document.getElementById('chartRegionalBreakdown');
+      const regMap = {};
+      filteredDataset.forEach(r => { regMap[r.region] = (regMap[r.region] || 0) + 1; });
+      const regs = Object.entries(regMap).sort((a, b) => b[1] - a[1]);
+      const maxR = Math.max(1, ...regs.map(r => r[1]));
+      regContainer.innerHTML = `<div class="space-y-3 pt-2">` + regs.map(([reg, cnt]) => {
+        const w = ((cnt / maxR) * 100).toFixed(1);
+        return `
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-200">${escapeHTML(reg)}</span>
+              <span class="font-bold text-sky-400">${cnt} agreements</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-sky-500 rounded-full" style="width:${w}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('') + `</div>`;
+
+      // Renewal Horizon 2026-2030
+      const horContainer = document.getElementById('chartRenewalHorizon');
+      const years = ['2026', '2027', '2028', '2029', '2030'];
+      const counts = years.map(y => ({
+        year: y,
+        count: filteredDataset.filter(r => !r.isOpenEnded && (r.endDate || '').startsWith(y)).length
+      }));
+      const maxH = Math.max(1, ...counts.map(c => c.count));
+      horContainer.innerHTML = `<div class="space-y-3 pt-2">` + counts.map(item => {
+        const w = ((item.count / maxH) * 100).toFixed(1);
+        return `
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-200">Calendar Year ${item.year}</span>
+              <span class="font-bold text-amber-400">${item.count} scheduled expirations</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full" style="width:${w}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('') + `</div>`;
+    }
+
+    // =========================================================================
+    // 7. TABLES RENDERING (WATCHLIST, ALERTS, MASTER REGISTER, FUNDED)
+    // =========================================================================
+    function renderTables() {
+      renderWatchlistTable();
+      renderAlertsTable();
+      renderRegisterTable();
+      renderFundedTable();
+    }
+
+    function renderWatchlistTable() {
+      const tbody = document.getElementById('watchlistTableBody');
+      // Prioritize expiring <6 months, then critical remarks
+      const expiring = filteredDataset
+        .map(r => ({ rec: r, lc: evaluateLifecycle(r) }))
+        .filter(x => x.lc.code === 'EXPIRING_6M' || x.lc.code === 'CRITICAL_90D')
+        .sort((a, b) => a.lc.daysRemaining - b.lc.daysRemaining);
+
+      const displayList = expiring.length > 0
+        ? expiring.slice(0, 12)
+        : filteredDataset.slice(0, 8).map(r => ({ rec: r, lc: evaluateLifecycle(r) }));
+
+      if (displayList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-500">No partnership agreements match the current filter criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = displayList.map((item, idx) => {
+        const r = item.rec;
+        const lc = item.lc;
+        return `
+          <tr onclick="openInspectorModal('${r.id}')" class="hover:bg-slate-800/60 cursor-pointer transition-colors">
+            <td class="py-2.5 px-4 font-mono text-slate-400">${idx + 1}</td>
+            <td class="py-2.5 px-4 font-semibold text-white">${escapeHTML(r.partner)}</td>
+            <td class="py-2.5 px-4 text-slate-300">${escapeHTML(r.country)}</td>
+            <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded bg-slate-800 text-sky-300 font-semibold text-[10px]">${escapeHTML(r.unit)}</span></td>
+            <td class="py-2.5 px-4 text-slate-400 font-mono">${escapeHTML(r.startDate || '—')}</td>
+            <td class="py-2.5 px-4 text-slate-300 font-mono">${r.isOpenEnded || !r.endDate ? 'Open-Ended' : escapeHTML(r.endDate)}</td>
+            <td class="py-2.5 px-4 text-slate-300">${escapeHTML(r.focalPoint)}</td>
+            <td class="py-2.5 px-4">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded border text-[10px] font-bold shrink-0 ${lc.badgeClass}">${lc.label}</span>
+                <span class="text-slate-400 truncate max-w-xs">${escapeHTML(r.remark)}</span>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderAlertsTable() {
+      const tbody = document.getElementById('alertsTableBody');
+      const items = filteredDataset
+        .map(r => ({ rec: r, lc: evaluateLifecycle(r) }))
+        .filter(x => x.lc.code === 'EXPIRING_6M' || x.lc.code === 'CRITICAL_90D' || x.lc.code === 'EXPIRED')
+        .sort((a, b) => (a.lc.daysRemaining ?? 9999) - (b.lc.daysRemaining ?? 9999));
+
+      document.getElementById('alertsViewSummary').textContent = `${items.length} Agreements Requiring Review`;
+
+      if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-500">No expiry alerts in the current filter selection.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = items.slice(0, 60).map(item => {
+        const r = item.rec;
+        const lc = item.lc;
+        return `
+          <tr onclick="openInspectorModal('${r.id}')" class="hover:bg-slate-800/60 cursor-pointer">
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${lc.badgeClass}">${lc.label}</span></td>
+            <td class="py-3 px-4 font-semibold text-white">${escapeHTML(r.partner)}</td>
+            <td class="py-3 px-4 text-slate-300">${escapeHTML(r.country)}</td>
+            <td class="py-3 px-4 text-sky-300 font-semibold">${escapeHTML(r.unit)}</td>
+            <td class="py-3 px-4 font-mono text-slate-300">${escapeHTML(r.endDate)}</td>
+            <td class="py-3 px-4 font-bold ${lc.daysRemaining < 0 ? 'text-rose-400' : 'text-amber-300'}">${lc.daysRemaining < 0 ? `${Math.abs(lc.daysRemaining)}d overdue` : `${lc.daysRemaining} days`}</td>
+            <td class="py-3 px-4 text-slate-300">${escapeHTML(r.focalPoint)}</td>
+            <td class="py-3 px-4 text-right">
+              <button onclick="event.stopPropagation(); openFormModal('${r.id}')" class="px-2.5 py-1 rounded bg-sky-600/20 hover:bg-sky-600/40 text-sky-300 border border-sky-500/30 text-[11px] font-semibold">Update / Renew</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function sortRegister(key) {
+      if (sortConfig.key === key) {
+        sortConfig.dir = sortConfig.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortConfig.key = key;
+        sortConfig.dir = 'asc';
+      }
+      renderRegisterTable();
+    }
+
+    function renderRegisterTable() {
+      const tbody = document.getElementById('registerTableBody');
+      const sorted = [...filteredDataset].sort((a, b) => {
+        const va = String(a[sortConfig.key] || '');
+        const vb = String(b[sortConfig.key] || '');
+        return sortConfig.dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+      });
+
+      const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * pageSize;
+      const slice = sorted.slice(start, start + pageSize);
+
+      document.getElementById('registerPaginationInfo').textContent =
+        sorted.length === 0 ? 'Showing 0 records' : `Showing ${start + 1}–${Math.min(start + pageSize, sorted.length)} of ${sorted.length} records`;
+      document.getElementById('pageIndicator').textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById('prevPageBtn').disabled = currentPage <= 1;
+      document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
+
+      if (slice.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="py-8 text-center text-slate-500">No agreements found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = slice.map(r => {
+        const lc = evaluateLifecycle(r);
+        return `
+          <tr onclick="openInspectorModal('${r.id}')" class="hover:bg-slate-800/60 cursor-pointer">
+            <td class="py-2.5 px-4 font-mono text-slate-400">${escapeHTML(r.id)}</td>
+            <td class="py-2.5 px-4 font-semibold text-white">${escapeHTML(r.partner)}</td>
+            <td class="py-2.5 px-4 text-slate-300">${escapeHTML(r.country)}</td>
+            <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded bg-slate-800 text-sky-300 font-semibold text-[10px]">${escapeHTML(r.unit)}</span></td>
+            <td class="py-2.5 px-4 text-slate-300">${escapeHTML(r.theme)}</td>
+            <td class="py-2.5 px-4 font-mono text-slate-400">${escapeHTML(r.startDate)}</td>
+            <td class="py-2.5 px-4 font-mono text-slate-300">${r.isOpenEnded || !r.endDate ? 'Open-Ended' : escapeHTML(r.endDate)}</td>
+            <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${lc.badgeClass}">${lc.label}</span></td>
+            <td class="py-2.5 px-4 text-right">
+              <button onclick="event.stopPropagation(); openFormModal('${r.id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px]">Edit</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function changePage(delta) {
+      currentPage += delta;
+      renderRegisterTable();
+    }
+
+    function renderFundedTable() {
+      const tbody = document.getElementById('fundedTableBody');
+      const funded = filteredDataset.filter(r => Number(r.grantAmount) > 0);
+      let usd = 0, rwf = 0;
+      funded.forEach(r => {
+        if (r.currency === 'RWF') rwf += Number(r.grantAmount);
+        else usd += Number(r.grantAmount);
+      });
+
+      document.getElementById('fundedPortfolioTotals').innerHTML = `
+        <span class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold">USD: $${usd.toLocaleString()}</span>
+        <span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-bold">RWF: ${rwf.toLocaleString()} RWF</span>
+      `;
+
+      if (funded.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No funded agreements match current filters.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = funded.map(r => `
+        <tr onclick="openInspectorModal('${r.id}')" class="hover:bg-slate-800/60 cursor-pointer">
+          <td class="py-3 px-4 font-semibold text-white">${escapeHTML(r.partner)}</td>
+          <td class="py-3 px-4 text-slate-300">${escapeHTML(r.country)}</td>
+          <td class="py-3 px-4 text-sky-300 font-semibold">${escapeHTML(r.unit)}</td>
+          <td class="py-3 px-4 text-slate-300">${escapeHTML(r.theme)}</td>
+          <td class="py-3 px-4 font-mono font-bold text-emerald-400">${r.currency === 'RWF' ? Number(r.grantAmount).toLocaleString() + ' RWF' : '$' + Number(r.grantAmount).toLocaleString() + ' ' + r.currency}</td>
+          <td class="py-3 px-4 font-mono text-slate-400">${escapeHTML(r.startDate)} &rarr; ${r.isOpenEnded ? 'Open' : escapeHTML(r.endDate)}</td>
+          <td class="py-3 px-4 text-slate-300">${escapeHTML(r.focalPoint)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // =========================================================================
+    // 8. TAB NAVIGATION & RESPONSIVE SIDEBAR
+    // =========================================================================
+    function switchTab(tab) {
+      activeTab = tab;
+      ['overview', 'alerts', 'register', 'funded', 'strategic'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tab);
+      });
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isTarget = btn.getAttribute('data-tab') === tab;
+        if (isTarget) {
+          btn.className = 'nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all bg-sky-500/20 text-white border border-sky-400/30 shadow-sm';
+        } else {
+          btn.className = 'nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all border border-transparent';
+        }
+      });
+
+      if (tab === 'strategic') renderStrategicCharts();
+      toggleMobileSidebar(false);
+    }
+
+    function toggleMobileSidebar(open) {
+      const sb = document.getElementById('sidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (open) {
+        sb.classList.remove('-translate-x-full');
+        bd.classList.remove('hidden');
+      } else {
+        sb.classList.add('-translate-x-full');
+        bd.classList.add('hidden');
+      }
+    }
+
+    // =========================================================================
+    // 9. MODALS: PARTNERSHIP INSPECTOR & CRUD ADD/EDIT
+    // =========================================================================
+    function openInspectorModal(id) {
+      const rec = masterDataset.find(r => r.id === id);
+      if (!rec) return;
+      const lc = evaluateLifecycle(rec);
+
+      document.getElementById('inspIdBadge').textContent = `${rec.id} • ${rec.unit}`;
+      document.getElementById('inspPartnerTitle').textContent = rec.partner;
+
+      document.getElementById('inspectorBody').innerHTML = `
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-[#090f1d] p-3.5 rounded-xl border border-slate-800">
+          <div>
+            <div class="text-[10px] uppercase text-slate-400 font-bold">Country &amp; Region</div>
+            <div class="text-white font-semibold mt-0.5">${escapeHTML(rec.country)} (${escapeHTML(rec.region)})</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase text-slate-400 font-bold">Lifecycle Status</div>
+            <div class="mt-0.5"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${lc.badgeClass}">${lc.label}</span></div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase text-slate-400 font-bold">Financial Commitment</div>
+            <div class="text-emerald-400 font-bold mt-0.5">${rec.grantAmount > 0 ? (rec.currency === 'RWF' ? Number(rec.grantAmount).toLocaleString() + ' RWF' : '$' + Number(rec.grantAmount).toLocaleString() + ' ' + rec.currency) : 'Non-Monetary / Core'}</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase text-slate-400 font-bold">Signing Date</div>
+            <div class="text-slate-200 font-mono mt-0.5">${escapeHTML(rec.startDate || 'N/A')}</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase text-slate-400 font-bold">Expiration Date</div>
+            <div class="text-slate-200 font-mono mt-0.5">${rec.isOpenEnded || !rec.endDate ? 'Open-Ended' : escapeHTML(rec.endDate)}</div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase text-slate-400 font-bold">UR Focal Point</div>
+            <div class="text-slate-200 font-medium mt-0.5">${escapeHTML(rec.focalPoint)}</div>
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase text-slate-400 font-bold mb-1">Strategic Thematic Pillar</div>
+          <div class="text-sky-300 font-semibold">${escapeHTML(rec.theme)}</div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase text-slate-400 font-bold mb-1">Governance Remarks &amp; M&amp;E Notes</div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-relaxed">${escapeHTML(rec.remark)}</div>
+        </div>
+      `;
+
+      document.getElementById('inspEditBtn').onclick = () => {
+        closeInspectorModal();
+        openFormModal(rec.id);
+      };
+      document.getElementById('inspDeleteBtn').onclick = () => {
+        masterDataset = masterDataset.filter(r => r.id !== rec.id);
+        persistToLocalStorage();
+        populateFilterDropdowns();
+        applyFilters();
+        closeInspectorModal();
+        showToast(`Deleted ${rec.id} from repository.`, 'info');
+      };
+
+      document.getElementById('inspectorModal').classList.remove('hidden');
+    }
+
+    function closeInspectorModal() {
+      document.getElementById('inspectorModal').classList.add('hidden');
+    }
+
+    function openFormModal(editId = null) {
+      const form = document.getElementById('mouForm');
+      form.reset();
+      if (editId) {
+        const rec = masterDataset.find(r => r.id === editId);
+        if (rec) {
+          document.getElementById('formModalTitle').textContent = `Edit Agreement — ${rec.id}`;
+          document.getElementById('formRecordId').value = rec.id;
+          document.getElementById('formPartner').value = rec.partner;
+          document.getElementById('formCountry').value = rec.country;
+          document.getElementById('formRegion').value = rec.region;
+          document.getElementById('formUnit').value = rec.unit;
+          document.getElementById('formTheme').value = rec.theme;
+          document.getElementById('formStartDate').value = rec.startDate;
+          document.getElementById('formEndDate').value = rec.endDate || '';
+          document.getElementById('formStatus').value = rec.status;
+          document.getElementById('formFocalPoint').value = rec.focalPoint;
+          document.getElementById('formGrantAmount').value = rec.grantAmount || '';
+          document.getElementById('formCurrency').value = rec.currency || 'USD';
+          document.getElementById('formRemark').value = rec.remark || '';
+        }
+      } else {
+        document.getElementById('formModalTitle').textContent = 'Register New Institutional MoU';
+        document.getElementById('formRecordId').value = '';
+        document.getElementById('formStartDate').value = '2026-11-14';
+      }
+      document.getElementById('formModal').classList.remove('hidden');
+    }
+
+    function closeFormModal() {
+      document.getElementById('formModal').classList.add('hidden');
+    }
+
+    function saveMouForm(evt) {
+      evt.preventDefault();
+      const existingId = document.getElementById('formRecordId').value;
+      const endDate = document.getElementById('formEndDate').value.trim();
+      const recordData = {
+        id: existingId || `MOU-${String(masterDataset.length + 1).padStart(4, '0')}`,
+        partner: document.getElementById('formPartner').value.trim(),
+        country: document.getElementById('formCountry').value.trim(),
+        region: document.getElementById('formRegion').value,
+        unit: document.getElementById('formUnit').value,
+        theme: document.getElementById('formTheme').value,
+        startDate: document.getElementById('formStartDate').value,
+        endDate,
+        isOpenEnded: !endDate,
+        status: document.getElementById('formStatus').value,
+        focalPoint: document.getElementById('formFocalPoint').value.trim() || 'IURDAS Secretariat',
+        grantAmount: parseFloat(document.getElementById('formGrantAmount').value) || 0,
+        currency: document.getElementById('formCurrency').value,
+        remark: document.getElementById('formRemark').value.trim() || 'Registered via IURDAS Executive Portal.'
+      };
+
+      if (existingId) {
+        const idx = masterDataset.findIndex(r => r.id === existingId);
+        if (idx !== -1) masterDataset[idx] = recordData;
+        showToast(`Updated ${recordData.id} (${recordData.partner}).`, 'success');
+      } else {
+        masterDataset.unshift(recordData);
+        showToast(`Registered new partnership: ${recordData.partner}.`, 'success');
+      }
+
+      persistToLocalStorage();
+      populateFilterDropdowns();
+      applyFilters();
+      closeFormModal();
+    }
+
+    // =========================================================================
+    // 10. CSV INGESTION, EXPORT & SCHEMA TEMPLATE
+    // =========================================================================
+    function triggerCSVUpload() {
+      document.getElementById('csvFileInput').click();
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let cur = '', inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          result.push(cur.trim());
+          cur = '';
+        } else {
+          cur += ch;
+        }
+      }
+      result.push(cur.trim());
+      return result;
+    }
+
+    function handleCSVFileSelect(evt) {
+      const file = evt.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const text = e.target.result;
+          const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+          if (lines.length < 2) {
+            showToast('CSV file appears empty or missing data rows.', 'error');
+            return;
+          }
+
+          const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+          const findCol = (keywords) => headers.findIndex(h => keywords.some(k => h.includes(k)));
+
+          const idxPartner = findCol(['partner', 'institution', 'organization', 'name']);
+          const idxCountry = findCol(['country', 'nation']);
+          const idxRegion = findCol(['region', 'continent']);
+          const idxUnit = findCol(['unit', 'college', 'school', 'implementing']);
+          const idxTheme = findCol(['theme', 'thematic', 'area', 'focus', 'scope']);
+          const idxStart = findCol(['start', 'signed', 'signing', 'date_signed']);
+          const idxEnd = findCol(['end', 'expiry', 'expiration', 'valid_until']);
+          const idxStatus = findCol(['status', 'workflow', 'state']);
+          const idxFocal = findCol(['focal', 'coordinator', 'contact', 'lead']);
+          const idxGrant = findCol(['grant', 'value', 'amount', 'budget', 'funding']);
+          const idxCurrency = findCol(['currency', 'curr']);
+          const idxRemark = findCol(['remark', 'note', 'comment']);
+
+          const imported = [];
+          for (let i = 1; i < lines.length; i++) {
+            const cols = parseCSVLine(lines[i]);
+            if (cols.length < 2) continue;
+
+            const partner = idxPartner >= 0 ? cols[idxPartner] : cols[0];
+            if (!partner) continue;
+
+            const country = idxCountry >= 0 && cols[idxCountry] ? cols[idxCountry] : 'Rwanda';
+            const rawUnit = idxUnit >= 0 && cols[idxUnit] ? cols[idxUnit].toUpperCase() : 'UR CENTRAL';
+            const endVal = idxEnd >= 0 ? cols[idxEnd] : '';
+            const isOpen = !endVal || endVal.toLowerCase().includes('open') || endVal.toLowerCase().includes('indefinite');
+
+            const rawGrant = idxGrant >= 0 ? String(cols[idxGrant]).replace(/[^0-9.]/g, '') : '0';
+            const grantAmount = parseFloat(rawGrant) || 0;
+
+            imported.push({
+              id: `CSV-${String(i).padStart(4, '0')}`,
+              partner,
+              country,
+              region: idxRegion >= 0 && cols[idxRegion] ? cols[idxRegion] : (country.toLowerCase() === 'rwanda' ? 'Africa' : 'International'),
+              unit: COLLEGES.includes(rawUnit) ? rawUnit : 'UR CENTRAL',
+              theme: idxTheme >= 0 && cols[idxTheme] ? cols[idxTheme] : 'Joint Research & Innovation',
+              startDate: idxStart >= 0 && cols[idxStart] ? cols[idxStart] : '2024-01-15',
+              endDate: isOpen ? '' : endVal,
+              isOpenEnded: isOpen,
+              status: idxStatus >= 0 && cols[idxStatus] ? cols[idxStatus] : (isOpen ? 'Open-Ended Active' : 'Active / In Execution'),
+              focalPoint: idxFocal >= 0 && cols[idxFocal] ? cols[idxFocal] : 'UR Focal Point',
+              grantAmount,
+              currency: idxCurrency >= 0 && cols[idxCurrency] ? cols[idxCurrency].toUpperCase() : 'USD',
+              remark: idxRemark >= 0 && cols[idxRemark] ? cols[idxRemark] : 'Imported from CSV dataset.'
+            });
+          }
+
+          if (imported.length === 0) {
+            showToast('No valid records could be parsed from the CSV.', 'error');
+            return;
+          }
+
+          masterDataset = imported;
+          dataSourceName = `${file.name} (${imported.length})`;
+          persistToLocalStorage();
+          populateFilterDropdowns();
+          resetAllFilters();
+          showToast(`Successfully ingested ${imported.length} records from ${file.name}!`, 'success');
+        } catch (err) {
+          showToast('Error parsing CSV file. Please verify file format.', 'error');
+        }
+      };
+      reader.readAsText(file);
+      evt.target.value = '';
+    }
+
+    function exportFilteredCSV() {
+      const headers = ['ID', 'Partner Institution', 'Country', 'Region', 'Implementing Unit', 'Thematic Focus', 'Start Date', 'End Date', 'Workflow Status', 'UR Focal Point', 'Grant Amount', 'Currency', 'Governance Remarks'];
+      const rows = filteredDataset.map(r => [
+        r.id, r.partner, r.country, r.region, r.unit, r.theme,
+        r.startDate, r.isOpenEnded ? 'Open-Ended' : r.endDate,
+        r.status, r.focalPoint, r.grantAmount || 0, r.currency || 'USD', r.remark
+      ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
+
+      const csvContent = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `UR_IURDAS_MoUs_Export_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`Exported ${filteredDataset.length} filtered agreements to CSV.`, 'success');
+    }
+
+    function downloadCSVTemplate() {
+      const sample = [
+        'Partner Institution,Country,Region,Implementing Unit,Thematic Focus,Start Date,End Date,Workflow Status,UR Focal Point,Grant Amount,Currency,Governance Remarks',
+        '"Karolinska Institutet","Sweden","Europe","CMHS","Health & Clinical Training","2022-03-01","2027-02-28","Under Renewal Review","Prof. P. Kyamanywa",450000,"USD","Renewal evaluation underway"',
+        '"Rwanda Biomedical Centre (RBC)","Rwanda","Africa","CMHS","Joint Research & Innovation","2023-06-15","","Open-Ended Active","Dr. A. Uwimana",250000000,"RWF","National clinical research alliance"'
+      ].join('\n');
+      const blob = new Blob([sample], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'MoUs_Datasets_Revised_Template.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Downloaded IURDAS CSV Schema Template.', 'info');
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const colors = {
+        success: 'bg-emerald-950/95 border-emerald-500/50 text-emerald-200',
+        error: 'bg-rose-950/95 border-rose-500/50 text-rose-200',
+        info: 'bg-slate-900/95 border-sky-500/50 text-sky-200'
+      };
+      const el = document.createElement('div');
+      el.className = `pointer-events-auto px-4 py-2.5 rounded-xl border shadow-xl text-xs font-medium backdrop-blur-md transition-all ${colors[type] || colors.info}`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 300);
+      }, 3600);
+    }
+
+    // Boot Application
+    window.addEventListener('DOMContentLoaded', initPortal);
+  </script>
+</body>
+</html>
